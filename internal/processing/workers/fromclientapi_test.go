@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package processing_test
+package workers_test
 
 import (
 	"context"
@@ -87,7 +87,7 @@ func (suite *FromClientAPITestSuite) TestProcessStreamNewStatus() {
 	}
 
 	// Process the new status.
-	if err := suite.processor.ProcessFromClientAPI(ctx, messages.FromClientAPI{
+	if err := suite.processor.Workers().ProcessFromClientAPI(ctx, messages.FromClientAPI{
 		APObjectType:   ap.ObjectNote,
 		APActivityType: ap.ActivityCreate,
 		GTSModel:       newStatus,
@@ -143,7 +143,7 @@ func (suite *FromClientAPITestSuite) TestProcessStatusDelete() {
 	}
 
 	// Process the status delete.
-	if err := suite.processor.ProcessFromClientAPI(ctx, messages.FromClientAPI{
+	if err := suite.processor.Workers().ProcessFromClientAPI(ctx, messages.FromClientAPI{
 		APObjectType:   ap.ObjectNote,
 		APActivityType: ap.ActivityDelete,
 		GTSModel:       deletedStatus,
@@ -230,7 +230,7 @@ func (suite *FromClientAPITestSuite) TestProcessNewStatusWithNotification() {
 	}
 
 	// Process the new status.
-	if err := suite.processor.ProcessFromClientAPI(ctx, messages.FromClientAPI{
+	if err := suite.processor.Workers().ProcessFromClientAPI(ctx, messages.FromClientAPI{
 		APObjectType:   ap.ObjectNote,
 		APActivityType: ap.ActivityCreate,
 		GTSModel:       newStatus,

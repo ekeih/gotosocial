@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package processing_test
+package workers_test
 
 import (
 	"context"
@@ -55,7 +55,7 @@ func (suite *FromFederatorTestSuite) TestProcessFederationAnnounce() {
 	announceStatus.Account = boostingAccount
 	announceStatus.Visibility = boostedStatus.Visibility
 
-	err := suite.processor.ProcessFromFederator(context.Background(), messages.FromFederator{
+	err := suite.processor.Workers().ProcessFromFederator(context.Background(), messages.FromFederator{
 		APObjectType:     ap.ActivityAnnounce,
 		APActivityType:   ap.ActivityCreate,
 		GTSModel:         announceStatus,
@@ -127,7 +127,7 @@ func (suite *FromFederatorTestSuite) TestProcessReplyMention() {
 	err = suite.db.PutStatus(context.Background(), replyingStatus)
 	suite.NoError(err)
 
-	err = suite.processor.ProcessFromFederator(context.Background(), messages.FromFederator{
+	err = suite.processor.Workers().ProcessFromFederator(context.Background(), messages.FromFederator{
 		APObjectType:     ap.ObjectNote,
 		APActivityType:   ap.ActivityCreate,
 		GTSModel:         replyingStatus,
@@ -196,7 +196,7 @@ func (suite *FromFederatorTestSuite) TestProcessFave() {
 	err := suite.db.Put(context.Background(), fave)
 	suite.NoError(err)
 
-	err = suite.processor.ProcessFromFederator(context.Background(), messages.FromFederator{
+	err = suite.processor.Workers().ProcessFromFederator(context.Background(), messages.FromFederator{
 		APObjectType:     ap.ActivityLike,
 		APActivityType:   ap.ActivityCreate,
 		GTSModel:         fave,
@@ -269,7 +269,7 @@ func (suite *FromFederatorTestSuite) TestProcessFaveWithDifferentReceivingAccoun
 	err := suite.db.Put(context.Background(), fave)
 	suite.NoError(err)
 
-	err = suite.processor.ProcessFromFederator(context.Background(), messages.FromFederator{
+	err = suite.processor.Workers().ProcessFromFederator(context.Background(), messages.FromFederator{
 		APObjectType:     ap.ActivityLike,
 		APActivityType:   ap.ActivityCreate,
 		GTSModel:         fave,
@@ -338,7 +338,7 @@ func (suite *FromFederatorTestSuite) TestProcessAccountDelete() {
 	suite.NoError(err)
 
 	// now they are mufos!
-	err = suite.processor.ProcessFromFederator(ctx, messages.FromFederator{
+	err = suite.processor.Workers().ProcessFromFederator(ctx, messages.FromFederator{
 		APObjectType:     ap.ObjectProfile,
 		APActivityType:   ap.ActivityDelete,
 		GTSModel:         deletedAccount,
@@ -413,7 +413,7 @@ func (suite *FromFederatorTestSuite) TestProcessFollowRequestLocked() {
 	err := suite.db.Put(ctx, satanFollowRequestTurtle)
 	suite.NoError(err)
 
-	err = suite.processor.ProcessFromFederator(ctx, messages.FromFederator{
+	err = suite.processor.Workers().ProcessFromFederator(ctx, messages.FromFederator{
 		APObjectType:     ap.ActivityFollow,
 		APActivityType:   ap.ActivityCreate,
 		GTSModel:         satanFollowRequestTurtle,
@@ -470,7 +470,7 @@ func (suite *FromFederatorTestSuite) TestProcessFollowRequestUnlocked() {
 	err := suite.db.Put(ctx, satanFollowRequestTurtle)
 	suite.NoError(err)
 
-	err = suite.processor.ProcessFromFederator(ctx, messages.FromFederator{
+	err = suite.processor.Workers().ProcessFromFederator(ctx, messages.FromFederator{
 		APObjectType:     ap.ActivityFollow,
 		APActivityType:   ap.ActivityCreate,
 		GTSModel:         satanFollowRequestTurtle,
@@ -544,7 +544,7 @@ func (suite *FromFederatorTestSuite) TestCreateStatusFromIRI() {
 	receivingAccount := suite.testAccounts["local_account_1"]
 	statusCreator := suite.testAccounts["remote_account_2"]
 
-	err := suite.processor.ProcessFromFederator(ctx, messages.FromFederator{
+	err := suite.processor.Workers().ProcessFromFederator(ctx, messages.FromFederator{
 		APObjectType:     ap.ObjectNote,
 		APActivityType:   ap.ActivityCreate,
 		GTSModel:         nil, // gtsmodel is nil because this is a forwarded status -- we want to dereference it using the iri

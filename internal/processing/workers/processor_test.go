@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package processing_test
+package workers_test
 
 import (
 	"context"
@@ -112,7 +112,7 @@ func (suite *ProcessingStandardTestSuite) SetupTest() {
 		suite.typeconverter,
 	)
 
-	suite.httpClient = testrig.NewMockHTTPClient(nil, "../../testrig/media")
+	suite.httpClient = testrig.NewMockHTTPClient(nil, "../../../testrig/media")
 	suite.httpClient.TestRemotePeople = testrig.NewTestFediPeople()
 	suite.httpClient.TestRemoteStatuses = testrig.NewTestFediStatuses()
 
@@ -120,14 +120,14 @@ func (suite *ProcessingStandardTestSuite) SetupTest() {
 	suite.mediaManager = testrig.NewTestMediaManager(&suite.state)
 	suite.federator = testrig.NewTestFederator(&suite.state, suite.transportController, suite.mediaManager)
 	suite.oauthServer = testrig.NewTestOauthServer(suite.db)
-	suite.emailSender = testrig.NewEmailSender("../../web/template/", nil)
+	suite.emailSender = testrig.NewEmailSender("../../../web/template/", nil)
 
 	suite.processor = processing.NewProcessor(suite.typeconverter, suite.federator, suite.oauthServer, suite.mediaManager, &suite.state, suite.emailSender)
 	suite.state.Workers.EnqueueClientAPI = suite.processor.Workers().EnqueueClientAPI
 	suite.state.Workers.EnqueueFederator = suite.processor.Workers().EnqueueFederator
 
 	testrig.StandardDBSetup(suite.db, suite.testAccounts)
-	testrig.StandardStorageSetup(suite.storage, "../../testrig/media")
+	testrig.StandardStorageSetup(suite.storage, "../../../testrig/media")
 }
 
 func (suite *ProcessingStandardTestSuite) TearDownTest() {
